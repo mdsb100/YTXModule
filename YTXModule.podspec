@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'YTXModule'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of YTXModule.'
+  s.summary          = 'YTXModule 组件化'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -17,21 +17,19 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+  s.description      = '组件化可以获得App生命周期'
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/YTXModule'
+  s.homepage         = 'http://gitlab.baidao.com/ios/YTXMoule.git'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'caojun' => '78612846@qq.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/YTXModule.git', :tag => s.version.to_s }
+  s.source           = { :git => 'http://gitlab.baidao.com/ios/YTXMoule.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '7.0'
 
   s.source_files = 'YTXModule/Classes/**/*'
-  
+  s.frameworks = 'Foundation', 'UIKit'
   # s.resource_bundles = {
   #   'YTXModule' => ['YTXModule/Assets/*.png']
   # }

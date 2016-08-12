@@ -7,12 +7,14 @@
 //
 
 #import "YTXAppDelegate.h"
+#import <YTXModule/YTXModule.h>
 
 @implementation YTXAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    NSLog(@"456");
     return YES;
 }
 
