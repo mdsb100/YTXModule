@@ -1,0 +1,19 @@
+PODS:
+  - Kiwi (2.4.0)
+  - YTXModule (0.1.0)
+
+DEPENDENCIES:
+  - Kiwi
+  - YTXModule (from `../`)
+
+EXTERNAL SOURCES:
+  YTXModule:
+    :path: ../
+
+SPEC CHECKSUMS:
+  Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
+  YTXModule: 360edebcb06f2f1b314ec8b4172c19420425096e
+
+PODFILE CHECKSUM: 3694f7afa3033188903693967df135fcd48b93f7
+
+COCOAPODS: 1.0.1
