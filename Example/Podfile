@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'YTXModule_Example' do
+  pod 'YTXModule', :path => '../'
+
+  target 'YTXModule_Tests' do
+    inherit! :search_paths
+
+    pod 'Kiwi'
+  end
+end
