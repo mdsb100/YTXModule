@@ -15,7 +15,7 @@ test:
     - cd Example
     - pwd
     - pod install --verbose
-    - xcodebuild test -workspace YTXRequest.xcworkspace -scheme YTXRequest-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' | xcpretty
+    - xcodebuild test -workspace YTXModule.xcworkspace -scheme YTXRequest-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' | xcpretty
 
 lint:
   tags:
