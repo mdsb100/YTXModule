@@ -167,6 +167,7 @@ static NSMutableArray<Class> *YTXModuleClasses;
     for (unsigned int i = 0; i < methodCount; i++) {
         Method method = methods[i];
         NSString * methodName = NSStringFromSelector(method_getName(method));
+        NSLog(@"~~~~~~~~~~~~ %@", methodName);
         if ([methodName hasPrefix:@"__YTXModuleRouterRegisterURL_"]) {
             [moduleClass performSelector:method_getName(method)]; \
         }
@@ -182,7 +183,7 @@ static NSMutableArray<Class> *YTXModuleClasses;
 
 #pragma mark - AppDelegate
 
-+ (void)applicationDidFinishLaunching:(UIApplication *)application
++ (void)ytxmodule_applicationDidFinishLaunching:(UIApplication *)application
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
@@ -198,20 +199,20 @@ static NSMutableArray<Class> *YTXModuleClasses;
     DEF_APPDELEGATE_METHOD_CONTAIN_RESULT(application, launchOptions);
 }
 
-+ (void)applicationDidBecomeActive:(UIApplication *)application
++ (void)ytxmodule_applicationDidBecomeActive:(UIApplication *)application
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationWillResignActive:(UIApplication *)application
++ (void)ytxmodule_applicationWillResignActive:(UIApplication *)application
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options NS_AVAILABLE_IOS(9_0); // no equiv. notification. return NO if the application can't open for some reaso
++ (BOOL)ytxmodule_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options NS_AVAILABLE_IOS(9_0); // no equiv. notification. return NO if the application can't open for some reaso
 {
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        [YTXModule application:app openURL:url options:options];
+        [YTXModule ytxmodule_application:app openURL:url options:options];
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
@@ -220,36 +221,36 @@ static NSMutableArray<Class> *YTXModuleClasses;
         }
     }
 }
-+ (void)applicationDidReceiveMemoryWarning:(UIApplication *)application;      // try to clean up as much memory as possible. next step is to terminate ap
++ (void)ytxmodule_applicationDidReceiveMemoryWarning:(UIApplication *)application;      // try to clean up as much memory as possible. next step is to terminate ap
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationWillTerminate:(UIApplication *)application
++ (void)ytxmodule_applicationWillTerminate:(UIApplication *)application
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationSignificantTimeChange:(UIApplication *)application;        // midnight, carrier time update, daylight savings time chang
++ (void)ytxmodule_applicationSignificantTimeChange:(UIApplication *)application;        // midnight, carrier time update, daylight savings time chang
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken NS_AVAILABLE_IOS(3_0)
++ (void)ytxmodule_application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken NS_AVAILABLE_IOS(3_0)
 {
     DEF_APPDELEGATE_METHOD(application, deviceToken);
 }
-+ (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error NS_AVAILABLE_IOS(3_0)
++ (void)ytxmodule_application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error NS_AVAILABLE_IOS(3_0)
 {
     DEF_APPDELEGATE_METHOD(application, error);
 }
-+ (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo NS_AVAILABLE_IOS(3_0)
++ (void)ytxmodule_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo NS_AVAILABLE_IOS(3_0)
 {
     DEF_APPDELEGATE_METHOD(application, userInfo);
 }
-+ (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler NS_AVAILABLE_IOS(7_0)
++ (void)ytxmodule_application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler NS_AVAILABLE_IOS(7_0)
 {
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        [YTXModule application:application handleEventsForBackgroundURLSession:identifier completionHandler:completionHandler];
+        [YTXModule ytxmodule_application:application handleEventsForBackgroundURLSession:identifier completionHandler:completionHandler];
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
@@ -258,12 +259,12 @@ static NSMutableArray<Class> *YTXModuleClasses;
         }
     }
 }
-+ (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(nullable NSDictionary *)userInfo reply:(void(^)(NSDictionary * __nullable replyInfo))reply NS_AVAILABLE_IOS(8_2)
++ (void)ytxmodule_application:(UIApplication *)application handleWatchKitExtensionRequest:(nullable NSDictionary *)userInfo reply:(void(^)(NSDictionary * __nullable replyInfo))reply NS_AVAILABLE_IOS(8_2)
 {
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        [YTXModule application:application handleWatchKitExtensionRequest:userInfo reply:reply];
+        [YTXModule ytxmodule_application:application handleWatchKitExtensionRequest:userInfo reply:reply];
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
@@ -272,23 +273,23 @@ static NSMutableArray<Class> *YTXModuleClasses;
         }
     }
 }
-+ (void)applicationShouldRequestHealthAuthorization:(UIApplication *)application NS_AVAILABLE_IOS(9_0)
++ (void)ytxmodule_applicationShouldRequestHealthAuthorization:(UIApplication *)application NS_AVAILABLE_IOS(9_0)
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationDidEnterBackground:(UIApplication *)application NS_AVAILABLE_IOS(4_0)
++ (void)ytxmodule_applicationDidEnterBackground:(UIApplication *)application NS_AVAILABLE_IOS(4_0)
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationWillEnterForeground:(UIApplication *)application NS_AVAILABLE_IOS(4_0)
++ (void)ytxmodule_applicationWillEnterForeground:(UIApplication *)application NS_AVAILABLE_IOS(4_0)
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationProtectedDataWillBecomeUnavailable:(UIApplication *)application NS_AVAILABLE_IOS(4_0)
++ (void)ytxmodule_applicationProtectedDataWillBecomeUnavailable:(UIApplication *)application NS_AVAILABLE_IOS(4_0)
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
-+ (void)applicationProtectedDataDidBecomeAvailable:(UIApplication *)application    NS_AVAILABLE_IOS(4_0)
++ (void)ytxmodule_applicationProtectedDataDidBecomeAvailable:(UIApplication *)application    NS_AVAILABLE_IOS(4_0)
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
