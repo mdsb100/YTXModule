@@ -30,11 +30,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'YTXModule/Classes/**/*'
   s.frameworks = 'Foundation', 'UIKit'
-  # s.resource_bundles = {
-  #   'YTXModule' => ['YTXModule/Assets/*.png']
-  # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

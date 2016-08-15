@@ -35,7 +35,7 @@ BOOL result = YES; \
 SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]); \
 SELECTOR_IS_EQUAL(ytx_selector, _cmd) \
 if (imp1 != imp2) { \
-    result = [YTXModule performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
+    result = !![YTXModule performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
 } \
 APPDELEGATE_METHOD_MSG_SEND(_cmd, __ARG1__, __ARG2__); \
 return result; \
@@ -47,6 +47,12 @@ if (imp1 != imp2) { \
     [YTXModule performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
 } \
 APPDELEGATE_METHOD_MSG_SEND(_cmd, __ARG1__, __ARG2__); \
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 
 static NSString * const YTX_MODULE_ROUTER_WILDCARD_CHARACTER = @"~";
 static NSString * const YTX_MODULE_ROUTER_SELECTOR_KEY = @"selector";
@@ -167,7 +173,6 @@ static NSMutableArray<Class> *YTXModuleClasses;
     for (unsigned int i = 0; i < methodCount; i++) {
         Method method = methods[i];
         NSString * methodName = NSStringFromSelector(method_getName(method));
-        NSLog(@"~~~~~~~~~~~~ %@", methodName);
         if ([methodName hasPrefix:@"__YTXModuleRouterRegisterURL_"]) {
             [moduleClass performSelector:method_getName(method)]; \
         }
@@ -209,10 +214,11 @@ static NSMutableArray<Class> *YTXModuleClasses;
 }
 + (BOOL)ytxmodule_application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options NS_AVAILABLE_IOS(9_0); // no equiv. notification. return NO if the application can't open for some reaso
 {
+    BOOL result = YES;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        [YTXModule ytxmodule_application:app openURL:url options:options];
+        result = [YTXModule ytxmodule_application:app openURL:url options:options];
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
@@ -220,6 +226,7 @@ static NSMutableArray<Class> *YTXModuleClasses;
             typed_msgSend(cls, _cmd, app, url, options);
         }
     }
+    return result;
 }
 + (void)ytxmodule_applicationDidReceiveMemoryWarning:(UIApplication *)application;      // try to clean up as much memory as possible. next step is to terminate ap
 {
@@ -540,5 +547,9 @@ static NSMutableArray<Class> *YTXModuleClasses;
     }
     return _routes;
 }
+
+#pragma clang diagnostic pop
+
+#pragma clang diagnostic pop
 
 @end

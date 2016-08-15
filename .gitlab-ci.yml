@@ -1,0 +1,31 @@
+script:
+  - pod --version
+
+stages:
+  - test
+  - lint
+
+test:
+  tags:
+    - iOS
+  only:
+    - master
+  stage: test
+  script:
+    - cd Example
+    - pwd
+    - pod install --verbose
+    - xcodebuild test -workspace YTXRequest.xcworkspace -scheme YTXRequest-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' | xcpretty
+
+lint:
+  tags:
+    - iOS
+  only:
+    - master
+  stage: lint
+  script:
+    - cd Example
+    - pwd
+    - pod install --verbose
+    - cd ..
+    - ./lint.sh
