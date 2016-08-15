@@ -8,8 +8,6 @@
 
 #import "YTXViewController.h"
 
-#import <MGJRouter/MGJRouter.h>
-
 #import <YTXModule/YTXModule.h>
 
 @interface YTXViewController ()

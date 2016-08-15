@@ -13,7 +13,7 @@
 
 YTXMODULE_EXTERN()
 {
-
+    //相当于load
 }
 
 YTXMODULE_EXTERN_ROUTER_METHOD(@"URL")
