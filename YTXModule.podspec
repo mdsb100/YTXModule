@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'YTXModule'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'YTXModule 组件化'
 
 # This description is used to generate tags and improve search results.
@@ -28,7 +28,30 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '7.0'
 
-  s.source_files = 'YTXModule/Classes/**/*'
+  if ENV['IS_SOURCE'] || ENV["#{s.name}_SOURCE"]
+      puts '-------------------------------------------------------------------'
+      puts "Notice:#{s.name} is source now"
+      puts '-------------------------------------------------------------------'
+      s.source_files = "#{s.name}/Classes/**/*"
+  else
+      puts '-------------------------------------------------------------------'
+      puts "Notice:#{s.name} is binary now"
+      puts '-------------------------------------------------------------------'
+      s.source_files = "#{s.name}/Classes/*.h"
+      s.public_header_files = "#{s.name}/Classes/*.h"
+      s.ios.vendored_libraries = "#{s.name}/lib/lib#{s.name}.a"
+  end
+
+  if ENV['NO_DEPENDENCY']
+      puts '-------------------------------------------------------------------'
+      puts "Notice:#{s.name} no dependency now"
+      puts '-------------------------------------------------------------------'
+  else
+      puts '-------------------------------------------------------------------'
+      puts "Notice:#{s.name} has dependency now!(dependency is empty!)"
+      puts '-------------------------------------------------------------------'
+  end
+
   s.frameworks = 'Foundation', 'UIKit'
 
 end
