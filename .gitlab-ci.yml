@@ -1,4 +1,4 @@
-script:
+before_script:
   - pod --version
 
 stages:
