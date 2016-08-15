@@ -8,6 +8,10 @@
 
 #import "YTXViewController.h"
 
+#import <MGJRouter/MGJRouter.h>
+
+#import <YTXModule/YTXModule.h>
+
 @interface YTXViewController ()
 
 @end
@@ -17,6 +21,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [YTXModule openURL:@"URL" withUserInfo:@{@"Test":@1} completion:^(id result) {
+        NSLog(@"completion:%@", result);
+    }];
+    
+    
+    NSString * testObject = [YTXModule objectForURL:@"object" withUserInfo:@{@"Test":@2}];
+    NSLog(@"%@", testObject);
 	// Do any additional setup after loading the view, typically from a nib.
 }
 

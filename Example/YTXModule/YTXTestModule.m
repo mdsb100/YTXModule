@@ -7,10 +7,30 @@
 //
 
 #import "YTXTestModule.h"
+#import <objc/runtime.h>
 
 @implementation YTXTestModule
 
-YTX_EXTERN_APPDELEGATE_MODULE()
+YTXMODULE_EXTERN()
+{
+
+}
+
+YTXMODULE_EXTERN_ROUTER_METHOD(@"URL")
+{
+    YTXMODULE_EXAPAND_PARAMETERS(parameters)
+    NSLog(@"%@ %@", userInfo, completion);
+    completion(@"Success");
+}
+
+YTXMODULE_EXTERN_ROUTER_OBJECT_METHOD(@"object")
+{
+    YTXMODULE_EXAPAND_PARAMETERS(parameters)
+    NSLog(@"%@ %@", userInfo, completion);
+    return @"我是个类型";
+}
+
+
 
 + (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
