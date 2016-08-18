@@ -123,8 +123,6 @@ static NSMutableArray<Class> *YTXModuleClasses;
 
 @interface YTXModule()
 
-@property (nonatomic, assign) BOOL ready;
-
 @property (nonatomic) NSMutableDictionary *routes;
 
 @end

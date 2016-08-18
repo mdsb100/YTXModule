@@ -48,8 +48,6 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
 
 @interface YTXModule : NSObject
 
-@property (nonatomic, readonly, assign) BOOL ready;
-
 + (void) registerAppDelegateModule:(nonnull Class) moduleClass;
 
 + (void) detectRouterModule:(nonnull Class) moduleClass;
