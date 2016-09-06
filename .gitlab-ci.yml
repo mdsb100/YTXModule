@@ -2,30 +2,76 @@ before_script:
   - pod --version
 
 stages:
-  - test
+  - init
+  - package
   - lint
+  - releasepod
+  - updateapp
+
+init:
+  tags:
+    - iOS
+  stage: init
+  script:
+    - pod repo update baidao-ios-ytx-pod-specs
+    - git config --get user.name
+    - git config --get user.email
+    - echo "CI_RUNNER_ID $CI_RUNNER_ID"
+    - echo "CI_RUNNER_DESCRIPTION $CI_RUNNER_DESCRIPTION"
+    - echo "CI_PROJECT_PATH $CI_PROJECT_PATH"
+    - echo "CI_PROJECT_URL $CI_PROJECT_URL"
+    - echo "CI_PROJECT_DIR $CI_PROJECT_DIR"
+    - echo "CI_PROJECT_NAME $CI_PROJECT_NAME"
+
+package:
+  tags:
+    - iOS
+  stage: package
+  only:
+    - master
+  artifacts:
+    paths:
+      - $CI_PROJECT_NAME/lib
+  script:
+    - find ./$CI_PROJECT_NAME/ -regex '.*\.a'
+    - time sh pod_package.sh  
 
 test:
   tags:
     - iOS
-  only:
-    - master
-  stage: test
-  script:
-    - cd Example
-    - pwd
-    - pod install --verbose
-    - xcodebuild test -workspace YTXModule.xcworkspace -scheme YTXModule-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' | xcpretty
-
-lint:
-  tags:
-    - iOS
-  only:
-    - master
   stage: lint
   script:
     - cd Example
     - pwd
-    - pod install --verbose
-    - cd ..
-    - ./lint.sh
+    - time IS_SOURCE=1 pod install --verbose
+    - time xcodebuild test -workspace $CI_PROJECT_NAME.xcworkspace -scheme $CI_PROJECT_NAME-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' | xcpretty
+
+lint:
+  tags:
+    - iOS
+  stage: lint
+  only:
+    - master
+  script:
+    - find ./$CI_PROJECT_NAME/ -regex '.*\.a'
+    - time sh lint.sh
+
+releasepod:
+  tags:
+    - iOS
+  only:
+    - master
+  stage: releasepod
+  script:
+    - find ./$CI_PROJECT_NAME/ -regex '.*\.a'
+    - time sh zip.sh
+    - time sh buildpod.sh
+
+updateapp:
+  tags:
+    - iOS
+  only:
+    - master
+  stage: updateapp
+  script:
+    - time sh release_pb_app.sh $CI_RUNNER_ID
