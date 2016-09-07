@@ -31,6 +31,12 @@
     NSString * testObject1 = [YTXModule objectForURL:@"object" withUserInfo:@{@"Test":@1}];
     NSString * testObject2 = [YTXModule objectForURL:@"object1" withUserInfo:@{@"Test":@2}];
     
+    [YTXModule openURL:@"YTX://Test"];
+    
+    [YTXModule openURL:@"YTX://Test/A"];
+    
+    [YTXModule openURL:@"YTX://Test/B"];
+    
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
