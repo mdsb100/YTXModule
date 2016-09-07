@@ -52,7 +52,7 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
 
 + (void) detectRouterModule:(nonnull Class) moduleClass;
 
-+ (nullable UIViewController *) createRootViewControllerWithOptions:(nullable NSDictionary *) options;
++ (nullable UIViewController *) createRootViewControllerWithModuleName:(nullable NSString*)moduleName options:(nullable NSDictionary *) options;
 
 #pragma mark - router
 /**

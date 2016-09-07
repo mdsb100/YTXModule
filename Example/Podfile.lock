@@ -1,6 +1,6 @@
 PODS:
   - Kiwi (2.4.0)
-  - YTXModule (0.2.0)
+  - YTXModule (0.3.3)
 
 DEPENDENCIES:
   - Kiwi

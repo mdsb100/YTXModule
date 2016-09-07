@@ -179,9 +179,13 @@ static NSMutableArray<Class> *YTXModuleClasses;
     free(methods);
 }
 
-+ (nullable UIViewController *) createRootViewControllerWithOptions:(nullable NSDictionary *) options
++ (nullable UIViewController *) createRootViewControllerWithModuleName:(nullable NSString*)moduleName options:(nullable NSDictionary *) options
 {
-    return NULL;
+    if (!moduleName) {
+        return NULL;
+    }
+    Class cls = NSClassFromString(moduleName);
+    return [cls performSelector:@selector(createRootViewControllerWithModuleName:options:) withObject:nil withObject:options];
 }
 
 #pragma mark - AppDelegate
