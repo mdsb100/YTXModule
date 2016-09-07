@@ -45,6 +45,8 @@ static id testCoverA;
 
 static id testCoverB;
 
+static id testCoverANotExits;
+
 @interface YTXTestModuleA : YTXModule
 
 @end
@@ -129,6 +131,11 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"NOParametersAndCompletion")
     testUserInfoNoExits = userInfo;
     
     testCompletionNoExits = completion;
+}
+
+YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test/A")
+{
+    testCoverANotExits=@1;
 }
 
 YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test/A")
@@ -224,6 +231,7 @@ describe(@"测试YTXModule", ^{
         
         it(@"检查router不会覆盖", ^{
             [testCover shouldNotBeNil];
+            [testCoverANotExits shouldBeNil];
             [testCoverA shouldNotBeNil];
             [testCoverB shouldNotBeNil];
         });
