@@ -22,6 +22,12 @@ for (Class cls in YTXModuleClasses) { \
 if ([cls respondsToSelector:__SELECTOR__]) { \
     [cls performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
 } \
+} \
+\
+for (id obj in YTXModuleObjects) { \
+    if ([obj respondsToSelector:__SELECTOR__]) { \
+        [obj performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
+    } \
 }
 
 #define SELECTOR_IS_EQUAL(__SELECTOR1__, __SELECTOR2__) \
@@ -119,7 +125,14 @@ BOOL YTXModuleClassIsRegistered(Class cls)
     return [objc_getAssociatedObject(cls, &YTXModuleClassIsRegistered) ?: @YES boolValue];
 }
 
+BOOL YTXModuleObjectIsRegistered(Class cls)
+{
+    return [objc_getAssociatedObject(cls, &YTXModuleObjectIsRegistered) ?: @YES boolValue];
+}
+
 static NSMutableArray<Class> *YTXModuleClasses;
+
+static NSMutableArray<id> *YTXModuleObjects;
 
 @interface YTXModule()
 
@@ -161,6 +174,27 @@ static NSMutableArray<Class> *YTXModuleClasses;
     
     objc_setAssociatedObject(moduleClass, &YTXModuleClassIsRegistered,
                              @NO, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (void) registerAppDelegateObject:(nonnull id) obj
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        YTXModuleObjects = [NSMutableArray new];
+    });
+    
+    // Register module
+    [YTXModuleObjects addObject:obj];
+    
+    objc_setAssociatedObject(obj, &YTXModuleObjectIsRegistered,
+                             @NO, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (void) unregisterAppDelegateObject:(nonnull id) obj
+{
+    [YTXModuleObjects removeObject:obj];
+    
+    objc_removeAssociatedObjects(obj);
 }
 
 + (void) detectRouterModule:(Class) moduleClass
@@ -224,6 +258,12 @@ static NSMutableArray<Class> *YTXModuleClasses;
             typed_msgSend(cls, _cmd, app, url, options);
         }
     }
+    
+    for (id obj in YTXModuleObjects) {
+        if ([obj respondsToSelector:_cmd]) {
+            typed_msgSend(obj, _cmd, app, url, options);
+        }
+    }
     return result;
 }
 + (void)ytxmodule_applicationDidReceiveMemoryWarning:(UIApplication *)application;      // try to clean up as much memory as possible. next step is to terminate ap
@@ -263,6 +303,12 @@ static NSMutableArray<Class> *YTXModuleClasses;
             typed_msgSend(cls, _cmd, application, identifier, completionHandler);
         }
     }
+    
+    for (id obj in YTXModuleObjects) {
+        if ([obj respondsToSelector:_cmd]) {
+            typed_msgSend(obj, _cmd, application, identifier, completionHandler);
+        }
+    }
 }
 + (void)ytxmodule_application:(UIApplication *)application handleWatchKitExtensionRequest:(nullable NSDictionary *)userInfo reply:(void(^)(NSDictionary * __nullable replyInfo))reply NS_AVAILABLE_IOS(8_2)
 {
@@ -275,6 +321,12 @@ static NSMutableArray<Class> *YTXModuleClasses;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, application, userInfo, reply);
+        }
+    }
+    
+    for (id obj in YTXModuleObjects) {
+        if ([obj respondsToSelector:_cmd]) {
+            typed_msgSend(obj, _cmd, application, userInfo, reply);
         }
     }
 }
