@@ -22,6 +22,12 @@ for (Class cls in YTXModuleClasses) { \
 if ([cls respondsToSelector:__SELECTOR__]) { \
     [cls performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
 } \
+} \
+\
+for (id obj in YTXModuleObjects) { \
+    if ([obj respondsToSelector:__SELECTOR__]) { \
+        [obj performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
+    } \
 }
 
 #define SELECTOR_IS_EQUAL(__SELECTOR1__, __SELECTOR2__) \
@@ -35,7 +41,9 @@ BOOL result = YES; \
 SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]); \
 SELECTOR_IS_EQUAL(ytx_selector, _cmd) \
 if (imp1 != imp2) { \
-    result = !![YTXModule performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
+    IMP method = [YTXModule methodForSelector:ytx_selector]; \
+    IMP (*callMethod)(id, id, id) = (BOOL *)method; \
+    result = callMethod(self, __ARG1__, __ARG2__); \
 } \
 APPDELEGATE_METHOD_MSG_SEND(_cmd, __ARG1__, __ARG2__); \
 return result; \
@@ -44,7 +52,9 @@ return result; \
 SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]); \
 SELECTOR_IS_EQUAL(ytx_selector, _cmd) \
 if (imp1 != imp2) { \
-    [YTXModule performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
+    IMP method = [YTXModule methodForSelector:ytx_selector]; \
+    IMP (*callMethod)(id, id, id) = (void *)method; \
+    callMethod(self, __ARG1__, __ARG2__); \
 } \
 APPDELEGATE_METHOD_MSG_SEND(_cmd, __ARG1__, __ARG2__); \
 
@@ -119,7 +129,14 @@ BOOL YTXModuleClassIsRegistered(Class cls)
     return [objc_getAssociatedObject(cls, &YTXModuleClassIsRegistered) ?: @YES boolValue];
 }
 
+BOOL YTXModuleObjectIsRegistered(Class cls)
+{
+    return [objc_getAssociatedObject(cls, &YTXModuleObjectIsRegistered) ?: @YES boolValue];
+}
+
 static NSMutableArray<Class> *YTXModuleClasses;
+
+static NSMutableArray<id> *YTXModuleObjects;
 
 @interface YTXModule()
 
@@ -163,6 +180,27 @@ static NSMutableArray<Class> *YTXModuleClasses;
                              @NO, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
++ (void) registerAppDelegateObject:(nonnull id) obj
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        YTXModuleObjects = [NSMutableArray new];
+    });
+    
+    // Register module
+    [YTXModuleObjects addObject:obj];
+    
+    objc_setAssociatedObject(obj, &YTXModuleObjectIsRegistered,
+                             @NO, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (void) unregisterAppDelegateObject:(nonnull id) obj
+{
+    [YTXModuleObjects removeObject:obj];
+    
+    objc_removeAssociatedObjects(obj);
+}
+
 + (void) detectRouterModule:(Class) moduleClass
 {
     unsigned int methodCount = 0;
@@ -195,7 +233,6 @@ static NSMutableArray<Class> *YTXModuleClasses;
     DEF_APPDELEGATE_METHOD(application, NULL);
 }
 
-
 + (BOOL)ytxmodule_application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions
 {
     DEF_APPDELEGATE_METHOD_CONTAIN_RESULT(application, launchOptions);
@@ -220,12 +257,20 @@ static NSMutableArray<Class> *YTXModuleClasses;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        result = [YTXModule ytxmodule_application:app openURL:url options:options];
+        IMP method = [YTXModule methodForSelector:ytx_selector];
+        IMP (*callMethod)(id, id, id, id) = (void *)method;
+        result = callMethod(self, app, url, options);
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, app, url, options);
+        }
+    }
+    
+    for (id obj in YTXModuleObjects) {
+        if ([obj respondsToSelector:_cmd]) {
+            typed_msgSend(obj, _cmd, app, url, options);
         }
     }
     return result;
@@ -259,12 +304,20 @@ static NSMutableArray<Class> *YTXModuleClasses;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        [YTXModule ytxmodule_application:application handleEventsForBackgroundURLSession:identifier completionHandler:completionHandler];
+        IMP method = [YTXModule methodForSelector:ytx_selector];
+        IMP (*callMethod)(id, id, id, id) = (void *)method;
+        callMethod(self, application, identifier, completionHandler);
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, application, identifier, completionHandler);
+        }
+    }
+    
+    for (id obj in YTXModuleObjects) {
+        if ([obj respondsToSelector:_cmd]) {
+            typed_msgSend(obj, _cmd, application, identifier, completionHandler);
         }
     }
 }
@@ -273,12 +326,20 @@ static NSMutableArray<Class> *YTXModuleClasses;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        [YTXModule ytxmodule_application:application handleWatchKitExtensionRequest:userInfo reply:reply];
+        IMP method = [YTXModule methodForSelector:ytx_selector];
+        IMP (*callMethod)(id, id, id, id) = (void *)method;
+        callMethod(self, application, userInfo, reply);
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, application, userInfo, reply);
+        }
+    }
+    
+    for (id obj in YTXModuleObjects) {
+        if ([obj respondsToSelector:_cmd]) {
+            typed_msgSend(obj, _cmd, application, userInfo, reply);
         }
     }
 }

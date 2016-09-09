@@ -39,6 +39,14 @@ static id testCompletionNoExits = nil;
 static id testUserInfoNoExits1 = nil;
 static id testCompletionNoExits1 = nil;
 
+static id testCover;
+
+static id testCoverA;
+
+static id testCoverB;
+
+static id testCoverANotExits;
+
 @interface YTXTestModuleA : YTXModule
 
 @end
@@ -125,6 +133,26 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"NOParametersAndCompletion")
     testCompletionNoExits = completion;
 }
 
+YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test/A")
+{
+    testCoverANotExits=@1;
+}
+
+YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test/A")
+{
+    testCoverA=@1;
+}
+
+YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test/B")
+{
+    testCoverB=@1;
+}
+
+YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test")
+{
+    testCover=@1;
+}
+
 + (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions
 {
     applicationLifCycle1 = YES;
@@ -145,10 +173,26 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"NOParametersAndCompletion")
 
 @end
 
+//@interface YTXTestModuleB : NSObject
+//
+//@end
+//
+//@implementation YTXTestModuleB
+//
+//- (void)applicationDidBecomeActive:(UIApplication *)application
+//{
+//    
+//}
+//
+//@end
+
 
 SPEC_BEGIN(InitialTestYTXModuleSpec)
 
 describe(@"测试YTXModule", ^{
+//    YTXTestModuleB * b = [YTXTestModuleB new];
+//    [YTXModule registerAppDelegateObject:b];
+    
     context(@"测试YTXMODULE_EXTERN宏", ^{
         it(@"检查YTXMODULE_EXTERN这个宏的包体会被调用", ^{
             [[@(isLoad) should] equal:@1];
@@ -199,6 +243,13 @@ describe(@"测试YTXModule", ^{
             [[testCompletionNoExits should] beNil];
             [[testUserInfoNoExits1 should] beNil];
             [[testCompletionNoExits1 should] beNil];
+        });
+        
+        it(@"检查router不会覆盖", ^{
+            [testCover shouldNotBeNil];
+            [testCoverANotExits shouldBeNil];
+            [testCoverA shouldNotBeNil];
+            [testCoverB shouldNotBeNil];
         });
     });
   

@@ -31,8 +31,41 @@
     NSString * testObject1 = [YTXModule objectForURL:@"object" withUserInfo:@{@"Test":@1}];
     NSString * testObject2 = [YTXModule objectForURL:@"object1" withUserInfo:@{@"Test":@2}];
     
+    [YTXModule openURL:@"YTX://Test"];
+    
+    [YTXModule openURL:@"YTX://Test/A"];
+    
+    [YTXModule openURL:@"YTX://Test/B"];
+    
 	// Do any additional setup after loading the view, typically from a nib.
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [YTXModule registerAppDelegateObject:self];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [YTXModule unregisterAppDelegateObject:self];
+    });
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [YTXModule unregisterAppDelegateObject:self];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    NSLog(@"Receive BecomeActive");
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    NSLog(@"Receive ResignActive");
+}
+
 
 - (void)didReceiveMemoryWarning
 {
