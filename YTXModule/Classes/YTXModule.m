@@ -20,14 +20,14 @@ Swizzle([delegate class], @selector(__SELECTORSTRING__), class_getClassMethod([Y
 #define APPDELEGATE_METHOD_MSG_SEND(__SELECTOR__, __ARG1__, __ARG2__) \
 for (Class cls in YTXModuleClasses) { \
 if ([cls respondsToSelector:__SELECTOR__]) { \
-    [cls performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
+[cls performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
 } \
 } \
 \
 for (id obj in YTXModuleObjects) { \
-    if ([obj respondsToSelector:__SELECTOR__]) { \
-        [obj performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
-    } \
+if ([obj respondsToSelector:__SELECTOR__]) { \
+[obj performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
+} \
 }
 
 #define SELECTOR_IS_EQUAL(__SELECTOR1__, __SELECTOR2__) \
@@ -41,9 +41,7 @@ BOOL result = YES; \
 SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]); \
 SELECTOR_IS_EQUAL(ytx_selector, _cmd) \
 if (imp1 != imp2) { \
-    IMP method = [YTXModule methodForSelector:ytx_selector]; \
-    IMP (*callMethod)(id, id, id) = (BOOL *)method; \
-    result = callMethod(self, __ARG1__, __ARG2__); \
+result = !![self performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
 } \
 APPDELEGATE_METHOD_MSG_SEND(_cmd, __ARG1__, __ARG2__); \
 return result; \
@@ -52,9 +50,7 @@ return result; \
 SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]); \
 SELECTOR_IS_EQUAL(ytx_selector, _cmd) \
 if (imp1 != imp2) { \
-    IMP method = [YTXModule methodForSelector:ytx_selector]; \
-    IMP (*callMethod)(id, id, id) = (void *)method; \
-    callMethod(self, __ARG1__, __ARG2__); \
+[self performSelector:ytx_selector withObject:__ARG1__ withObject:__ARG2__]; \
 } \
 APPDELEGATE_METHOD_MSG_SEND(_cmd, __ARG1__, __ARG2__); \
 
@@ -92,6 +88,11 @@ void Swizzle(Class class, SEL originalSelector, Method swizzledMethod)
     } else {
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }
+    //
+    class_addMethod(class,
+                    swizzledSelector,
+                    method_getImplementation(swizzledMethod),
+                    method_getTypeEncoding(swizzledMethod));
 }
 
 @implementation UIApplication (YTXModule)
@@ -257,9 +258,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        IMP method = [YTXModule methodForSelector:ytx_selector];
-        IMP (*callMethod)(id, id, id, id) = (void *)method;
-        result = callMethod(self, app, url, options);
+        result = ((BOOL (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, app, url, options);
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
@@ -304,9 +303,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        IMP method = [YTXModule methodForSelector:ytx_selector];
-        IMP (*callMethod)(id, id, id, id) = (void *)method;
-        callMethod(self, application, identifier, completionHandler);
+        ((void (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, application, identifier, completionHandler);
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
@@ -326,9 +323,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
     if (imp1 != imp2) {
-        IMP method = [YTXModule methodForSelector:ytx_selector];
-        IMP (*callMethod)(id, id, id, id) = (void *)method;
-        callMethod(self, application, userInfo, reply);
+        ((void (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, application, userInfo, reply);
     }
     id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
