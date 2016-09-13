@@ -47,6 +47,11 @@ static id testCoverB;
 
 static id testCoverANotExits;
 
+static int testWillCallObjectForUrl = 0;
+static int testOnceWillCallObjectForUrl = 0;
+static int testWillCallOpenUrl = 0;
+static int testOnceWillCallOpenUrl = 0;
+
 @interface YTXTestModuleA : YTXModule
 
 @end
@@ -171,6 +176,23 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test")
     
 }
 
++ (void)onceWillCallOpenUrl {
+    testOnceWillCallOpenUrl++;
+}
+
++ (void)willCallOpenUrl {
+    testWillCallOpenUrl++;
+}
+
+
++ (void)onceWillCallObjectForUrl {
+    testOnceWillCallObjectForUrl++;
+}
+
++ (void)willCallObjectForUrl {
+    testWillCallObjectForUrl++;
+}
+
 @end
 
 //@interface YTXTestModuleB : NSObject
@@ -253,6 +275,15 @@ describe(@"测试YTXModule", ^{
         });
     });
   
+    context(@"测试willCallObjectForUrl", ^{
+        it(@"检查多次willCallObjectForUrl", ^{
+            [[@(testWillCallObjectForUrl) should] beGreaterThan:@1];
+        });
+        
+        it(@"检查一次willOnceCallObjectForUrl", ^{
+            [[@(testOnceWillCallObjectForUrl) should] equal:@1];
+        });
+    });
 });
 
 SPEC_END

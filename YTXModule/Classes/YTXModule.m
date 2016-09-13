@@ -113,6 +113,7 @@ void Swizzle(Class class, SEL originalSelector, Method swizzledMethod)
         SWIZZLE_DELEGATE_METHOD(application: didRegisterForRemoteNotificationsWithDeviceToken:)
         SWIZZLE_DELEGATE_METHOD(application: didFailToRegisterForRemoteNotificationsWithError:)
         SWIZZLE_DELEGATE_METHOD(application: didReceiveRemoteNotification:)
+        SWIZZLE_DELEGATE_METHOD(application: didReceiveLocalNotification:)
         SWIZZLE_DELEGATE_METHOD(application: handleEventsForBackgroundURLSession: completionHandler:)
         SWIZZLE_DELEGATE_METHOD(application: handleWatchKitExtensionRequest: reply:)
         SWIZZLE_DELEGATE_METHOD(applicationShouldRequestHealthAuthorization:)
@@ -227,6 +228,34 @@ static NSMutableArray<id> *YTXModuleObjects;
     return [cls performSelector:@selector(createRootViewControllerWithModuleName:options:) withObject:nil withObject:options];
 }
 
++ (void)callOpenUrl {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self onceWillCallOpenUrl];
+    });
+    [self willCallOpenUrl];
+}
+
++ (void)onceWillCallOpenUrl {
+}
+
++ (void)willCallOpenUrl {
+}
+
++ (void)callObjectForUrl {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self onceWillCallObjectForUrl];
+    });
+    [self willCallObjectForUrl];
+}
+
++ (void)willCallObjectForUrl {
+}
+
++ (void)onceWillCallObjectForUrl {
+}
+
 #pragma mark - AppDelegate
 
 + (void)ytxmodule_applicationDidFinishLaunching:(UIApplication *)application
@@ -295,6 +324,10 @@ static NSMutableArray<id> *YTXModuleObjects;
     DEF_APPDELEGATE_METHOD(application, error);
 }
 + (void)ytxmodule_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo NS_AVAILABLE_IOS(3_0)
+{
+    DEF_APPDELEGATE_METHOD(application, userInfo);
+}
++ (void)ytxmodule_application:(UIApplication *)application didReceiveLocalNotification:(NSDictionary *)userInfo NS_AVAILABLE_IOS(3_0)
 {
     DEF_APPDELEGATE_METHOD(application, userInfo);
 }
