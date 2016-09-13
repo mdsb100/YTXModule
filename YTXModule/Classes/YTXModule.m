@@ -228,6 +228,34 @@ static NSMutableArray<id> *YTXModuleObjects;
     return [cls performSelector:@selector(createRootViewControllerWithModuleName:options:) withObject:nil withObject:options];
 }
 
++ (void)callOpenUrl {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self onceWillCallOpenUrl];
+    });
+    [self willCallOpenUrl];
+}
+
++ (void)onceWillCallOpenUrl {
+}
+
++ (void)willCallOpenUrl {
+}
+
++ (void)callObjectForUrl {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self onceWillCallObjectForUrl];
+    });
+    [self willCallObjectForUrl];
+}
+
++ (void)willCallObjectForUrl {
+}
+
++ (void)onceWillCallObjectForUrl {
+}
+
 #pragma mark - AppDelegate
 
 + (void)ytxmodule_applicationDidFinishLaunching:(UIApplication *)application

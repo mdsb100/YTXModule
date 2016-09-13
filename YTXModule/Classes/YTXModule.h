@@ -30,16 +30,34 @@
 #define YTXMODULE_EXTERN_ROUTER_METHOD(url) \
 YTXMODULE_EXTERN_ROUTER_REMAP_RETURN_METHOD(url, __COUNTER__, void)
 
-#define YTXMODULE_EXTERN_ROUTER_OBJECT_METHOD(url) \
-YTXMODULE_EXTERN_ROUTER_REMAP_RETURN_METHOD(url, __COUNTER__, id)
-
 #define YTXMODULE_EXTERN_ROUTER_REMAP_RETURN_METHOD(url, counter, returntype) \
 + (void)YTX_CONCAT(__YTXModuleRouterRegisterURL_, YTX_CONCAT(counter, __LINE__)) \
 { \
-    [YTXModule registerURLPattern:url withTarget:self withSelector:@selector(YTX_CONCAT(__YTXModuleRouterSelector_, YTX_CONCAT(counter, __LINE__)):)]; \
+[YTXModule registerURLPattern:url withTarget:self withSelector:@selector(YTX_CONCAT(__YTXModuleRouterSelector_, YTX_CONCAT(counter, __LINE__)):)]; \
 } \
 \
-+ (returntype)YTX_CONCAT(__YTXModuleRouterSelector_, YTX_CONCAT(counter, __LINE__)):(nullable NSDictionary *) parameters \
++ (void)YTX_CONCAT(__YTXModuleRouterSelector_, YTX_CONCAT(counter, __LINE__)):(nullable NSDictionary *) parameters { \
+[self performSelector:@selector(callOpenUrl)]; \
+[self performSelector:@selector(YTX_CONCAT(__YTXModuleRouterSelector2_, YTX_CONCAT(counter, __LINE__)):) withObject:parameters]; \
+} \
+\
++ (void)YTX_CONCAT(__YTXModuleRouterSelector2_, YTX_CONCAT(counter, __LINE__)):(nullable NSDictionary *) parameters
+
+#define YTXMODULE_EXTERN_ROUTER_OBJECT_METHOD(url) \
+YTXMODULE_EXTERN_ROUTER_REMAP_RETURN_OBJECT_METHOD(url, __COUNTER__, id)
+
+#define YTXMODULE_EXTERN_ROUTER_REMAP_RETURN_OBJECT_METHOD(url, counter, returntype) \
++ (void)YTX_CONCAT(__YTXModuleRouterRegisterURL_, YTX_CONCAT(counter, __LINE__)) \
+{ \
+    [YTXModule registerURLPattern:url withTarget:self withSelector:@selector(YTX_CONCAT(__YTXModuleRouterObjectSelector_, YTX_CONCAT(counter, __LINE__)):)]; \
+} \
+\
++ (id)YTX_CONCAT(__YTXModuleRouterObjectSelector_, YTX_CONCAT(counter, __LINE__)):(nullable NSDictionary *) parameters { \
+    [self performSelector:@selector(callObjectForUrl)]; \
+    return [self performSelector:@selector(YTX_CONCAT(__YTXModuleRouterObjectSelector2_, YTX_CONCAT(counter, __LINE__)):) withObject:parameters]; \
+} \
+\
++ (id)YTX_CONCAT(__YTXModuleRouterObjectSelector2_, YTX_CONCAT(counter, __LINE__)):(nullable NSDictionary *) parameters 
 
 
 extern  NSString *const _Nonnull YTXModuleRouterParameterURL;
@@ -57,6 +75,26 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
 + (void) unregisterAppDelegateObject:(nonnull id) obj;
 
 + (nullable UIViewController *) createRootViewControllerWithModuleName:(nullable NSString*)moduleName options:(nullable NSDictionary *) options;
+
+/**
+ *  在调用 OpenUrl 之前执行的方法，只会执行一次。
+ */
++ (void)onceWillCallOpenUrl;
+
+/**
+ *  在调用 OpenUrl 之前执行的方法，总是会执行。
+ */
++ (void)willCallOpenUrl;
+
+/**
+ *  在调用 objectForURL 之前执行的方法，只会执行一次。
+ */
++ (void)onceWillCallObjectForUrl;
+
+/**
+ *  在调用 objectForURL 之前执行的方法，总是会执行。
+ */
++ (void)willCallObjectForUrl;
 
 #pragma mark - router
 /**
