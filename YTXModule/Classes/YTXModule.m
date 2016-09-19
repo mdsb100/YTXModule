@@ -289,7 +289,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     if (imp1 != imp2) {
         result = ((BOOL (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, app, url, options);
     }
-    id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
+    BOOL (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, app, url, options);
@@ -338,7 +338,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     if (imp1 != imp2) {
         ((void (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, application, identifier, completionHandler);
     }
-    id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
+    void (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, application, identifier, completionHandler);
@@ -358,7 +358,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     if (imp1 != imp2) {
         ((void (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, application, userInfo, reply);
     }
-    id (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
+    void (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
     for (Class cls in YTXModuleClasses) {
         if ([cls respondsToSelector:_cmd]) {
             typed_msgSend(cls, _cmd, application, userInfo, reply);
