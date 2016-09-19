@@ -170,6 +170,11 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test")
     return YES;
 }
 
++ (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
+    NSLog(@"----------------------");
+    return YES;
+}
+
 + (void)applicationDidBecomeActive:(UIApplication *)application
 {
     applicationLifCycle3 = YES;
