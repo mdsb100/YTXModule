@@ -96,6 +96,11 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
  */
 + (void)willCallObjectForUrl;
 
+
++ (void)callObjectForUrl;
+
++ (void)callOpenUrl;
+
 #pragma mark - router
 /**
  *  注册 URLPattern 对应的 Handler，在 handler 中可以初始化 VC，然后对 VC 做各种操作
