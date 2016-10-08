@@ -64,6 +64,8 @@ static NSString * const YTX_MODULE_ROUTER_WILDCARD_CHARACTER = @"~";
 static NSString * const YTX_MODULE_ROUTER_SELECTOR_KEY = @"selector";
 static NSString * const YTX_MODULE_ROUTER_CLASS_KEY = @"cls";
 
+static char YTXModuleOnceFlagOfOpenUrl;
+static char YTXModuleOnceFlagOfObjectOfUrl;
 
 NSString *const YTXModuleRouterParameterURL = @"YTXModuleRouterParameterURL";
 NSString *const YTXModuleRouterParameterCompletion = @"YTXRouterParameterCompletion";
@@ -229,10 +231,10 @@ static NSMutableArray<id> *YTXModuleObjects;
 }
 
 + (void)callOpenUrl {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (![self onceFlagOfOpenUrl]) {
+        [self markOnceFlagOfOpenUrl];
         [self onceWillCallOpenUrl];
-    });
+    }
     [self willCallOpenUrl];
 }
 
@@ -243,10 +245,10 @@ static NSMutableArray<id> *YTXModuleObjects;
 }
 
 + (void)callObjectForUrl {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (![self onceFlagOfObjectForUrl]) {
+        [self markOnceFlagOfObjectForUrl];
         [self onceWillCallObjectForUrl];
-    });
+    }
     [self willCallObjectForUrl];
 }
 
@@ -254,6 +256,26 @@ static NSMutableArray<id> *YTXModuleObjects;
 }
 
 + (void)onceWillCallObjectForUrl {
+}
+
++ (void)markOnceFlagOfOpenUrl {
+    objc_setAssociatedObject(self, &YTXModuleOnceFlagOfOpenUrl,
+                             @YES,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (BOOL)onceFlagOfOpenUrl {
+    return [objc_getAssociatedObject(self, &YTXModuleOnceFlagOfOpenUrl) boolValue];
+}
+
++ (void)markOnceFlagOfObjectForUrl {
+    objc_setAssociatedObject(self, &YTXModuleOnceFlagOfObjectOfUrl,
+                             @YES,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (BOOL)onceFlagOfObjectForUrl {
+    return [objc_getAssociatedObject(self, &YTXModuleOnceFlagOfObjectOfUrl) boolValue];
 }
 
 #pragma mark - AppDelegate
