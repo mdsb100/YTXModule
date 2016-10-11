@@ -133,9 +133,9 @@ BOOL YTXModuleClassIsRegistered(Class cls)
     return [objc_getAssociatedObject(cls, &YTXModuleClassIsRegistered) ?: @YES boolValue];
 }
 
-BOOL YTXModuleObjectIsRegistered(Class cls)
+BOOL YTXModuleObjectIsRegistered(id x)
 {
-    return [objc_getAssociatedObject(cls, &YTXModuleObjectIsRegistered) ?: @YES boolValue];
+    return [objc_getAssociatedObject(x, &YTXModuleObjectIsRegistered) ?: @YES boolValue];
 }
 
 static NSMutableArray<Class> *YTXModuleClasses;
@@ -202,7 +202,9 @@ static NSMutableArray<id> *YTXModuleObjects;
 {
     [YTXModuleObjects removeObject:obj];
     
-    objc_removeAssociatedObjects(obj);
+    //以安全的方式移除相关关联，而不是移除所有关联
+    objc_setAssociatedObject(obj, &YTXModuleObjectIsRegistered,
+                             nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 + (void) detectRouterModule:(Class) moduleClass
