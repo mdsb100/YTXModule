@@ -25,8 +25,9 @@ if ([cls respondsToSelector:__SELECTOR__]) { \
 } \
 \
 for (id obj in YTXModuleObjects) { \
-if ([obj respondsToSelector:__SELECTOR__]) { \
-[obj performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
+id target = [obj nonretainedObjectValue];\
+if ([target respondsToSelector:__SELECTOR__]) { \
+[target performSelector:__SELECTOR__ withObject:__ARG1__ withObject:__ARG2__]; \
 } \
 }
 
@@ -192,7 +193,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     });
     
     // Register module
-    [YTXModuleObjects addObject:obj];
+    [YTXModuleObjects addObject:[NSValue valueWithNonretainedObject:obj]];
     
     objc_setAssociatedObject(obj, &YTXModuleObjectIsRegistered,
                              @NO, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -200,7 +201,14 @@ static NSMutableArray<id> *YTXModuleObjects;
 
 + (void) unregisterAppDelegateObject:(nonnull id) obj
 {
-    [YTXModuleObjects removeObject:obj];
+    for (int i = 0; i < YTXModuleObjects.count ; i++) {
+        NSValue *currentValue = YTXModuleObjects[i];
+        id currentObj = [currentValue nonretainedObjectValue];
+        if (currentObj == nil || currentObj == obj) {
+            [YTXModuleObjects removeObject:currentValue];
+            i--;
+        }
+    }
     
     //以安全的方式移除相关关联，而不是移除所有关联
     objc_setAssociatedObject(obj, &YTXModuleObjectIsRegistered,
@@ -320,9 +328,10 @@ static NSMutableArray<id> *YTXModuleObjects;
         }
     }
     
-    for (id obj in YTXModuleObjects) {
-        if ([obj respondsToSelector:_cmd]) {
-            typed_msgSend(obj, _cmd, app, url, options);
+    for (NSValue * obj in YTXModuleObjects) {
+        id target = [obj nonretainedObjectValue];
+        if ([target respondsToSelector:_cmd]) {
+            typed_msgSend(target, _cmd, app, url, options);
         }
     }
     return result;
@@ -369,9 +378,10 @@ static NSMutableArray<id> *YTXModuleObjects;
         }
     }
     
-    for (id obj in YTXModuleObjects) {
-        if ([obj respondsToSelector:_cmd]) {
-            typed_msgSend(obj, _cmd, application, identifier, completionHandler);
+    for (NSValue * obj in YTXModuleObjects) {
+        id target = [obj nonretainedObjectValue];
+        if ([target respondsToSelector:_cmd]) {
+            typed_msgSend(target, _cmd, application, identifier, completionHandler);
         }
     }
 }
@@ -389,9 +399,10 @@ static NSMutableArray<id> *YTXModuleObjects;
         }
     }
     
-    for (id obj in YTXModuleObjects) {
-        if ([obj respondsToSelector:_cmd]) {
-            typed_msgSend(obj, _cmd, application, userInfo, reply);
+    for (NSValue * obj in YTXModuleObjects) {
+        id target = [obj nonretainedObjectValue];
+        if ([target respondsToSelector:_cmd]) {
+            typed_msgSend(target, _cmd, application, userInfo, reply);
         }
     }
 }
@@ -450,7 +461,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     
     if (parameters) {
         SEL selector = NSSelectorFromString(parameters[YTX_MODULE_ROUTER_SELECTOR_KEY]);
-        id target = parameters[YTX_MODULE_ROUTER_CLASS_KEY];
+        id target = [parameters[YTX_MODULE_ROUTER_CLASS_KEY] nonretainedObjectValue];
         if (completion) {
             parameters[YTXModuleRouterParameterCompletion] = completion;
         }
@@ -500,7 +511,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
     SEL selector = NSSelectorFromString(parameters[YTX_MODULE_ROUTER_SELECTOR_KEY]);
-    id target = parameters[YTX_MODULE_ROUTER_CLASS_KEY];
+    id target = [parameters[YTX_MODULE_ROUTER_CLASS_KEY] nonretainedObjectValue];
     if (selector && target) {
         if (userInfo) {
             parameters[YTXModuleRouterParameterUserInfo] = userInfo;
@@ -600,7 +611,7 @@ static NSMutableArray<id> *YTXModuleObjects;
         parameters[YTX_MODULE_ROUTER_SELECTOR_KEY] = [subRoutes[@"_"] copy];
     }
     if (subRoutes[@"__"]) {
-        parameters[YTX_MODULE_ROUTER_CLASS_KEY] = [subRoutes[@"__"] copy];
+        parameters[YTX_MODULE_ROUTER_CLASS_KEY] = [NSValue valueWithNonretainedObject:[subRoutes[@"__"] copy]];
     }
     
     return parameters;

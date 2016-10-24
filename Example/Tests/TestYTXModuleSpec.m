@@ -26,6 +26,7 @@ static BOOL isCallRouterObjectMacro3 = NO;
 static NSString * testQueryStringQueryValue = nil;
 static NSString * testQueryStringNameValue = nil;
 static NSString * testQueryStringAgeValue = nil;
+static NSString * testRegisterTargetSelector = nil;
 
 static id completionExits = nil;
 static id userInfoExits = nil;
@@ -161,7 +162,13 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://Test")
 + (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions
 {
     applicationLifCycle1 = YES;
+    [YTXModule registerURLPattern:@"YTX://Test/targetSelector" withTarget:self withSelector:@selector(testRegisterTargetSelector)];
+    testRegisterTargetSelector = [YTXModule objectForURL:@"YTX://Test/targetSelector"];
     return YES;
+}
+
++ (NSString *)testRegisterTargetSelector {
+    return @"1024 Hello World";
 }
 
 + (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions
@@ -226,6 +233,11 @@ describe(@"测试YTXModule", ^{
         });
     });
     
+    context(@"测试YTXMODULE注册方法", ^{
+        it(@"检查注册方法是否被调用", ^{
+            [[testRegisterTargetSelector should] equal:@"1024 Hello World"];
+        });
+    });
     
     context(@"测试runtime扩展Application生命周期的方法", ^{
         it(@"检查方法被调用：+ (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions", ^{
