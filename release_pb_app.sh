@@ -1,25 +1,24 @@
+
 PROJECT_NAME=${PWD##*/}
 
 APP_NAME="PBApp"
 
 APP_PATH="$APP_NAME/workspace/Podfile"
 
-RUNNER_ID=$1
-
-RUNNER_INFO=""
-
-if [[ $RUNNER_ID ]]; then
-  RUNNER_INFO="Runner is $RUNNER_ID"
-fi
+NOW_BRANCH=$(git branch)
 
 if [ ! -d "$APP_NAME" ]; then
   git clone git@gitlab.baidao.com:pb/PBApp.git
+  cd PBApp
+  git checkout dev
+  git pull
+  cd ..
+else
+  cd PBApp
+  git checkout dev
+  git pull
+  cd ..
 fi
-
-cd PBApp
-git checkout dev
-git pull
-cd ..
 
 CURRENT_POD_VERSION=$(cat $PROJECT_NAME.podspec | grep 's.version' | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
 
@@ -77,7 +76,7 @@ ls -l
 
 if [[ -f "merge_request.sh" ]]; then
 	echo "Try to Add merge_request with PBApp"
-	sh merge_request.sh "CI Update Podfile $PROJECT_NAME@$CURRENT_POD_VERSION;$RUNNER_INFO" dev
+	sh merge_request.sh "CI Update Podfile $PROJECT_NAME@$CURRENT_POD_VERSION" dev
 fi
 
 cd ..

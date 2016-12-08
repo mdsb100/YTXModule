@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'YTXModule'
-  s.version          = '0.6.5'
+  s.version          = '0.6.6'
   s.summary          = 'YTXModule 组件化'
 
 # This description is used to generate tags and improve search results.
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '7.0'
 
-  ytx_zipURL='http://gitlab.baidao.com/binaryfiles/YTXModule.zip'
+  ytx_zipURL='http://ios-pod.baidao.com/binaryfiles/YTXModule.zip'
 
   if ENV['IS_SOURCE'] || ENV["#{s.name}_SOURCE"]
       s.source           = { :git => 'http://gitlab.baidao.com/ios/YTXModule.git', :tag => s.version.to_s }
