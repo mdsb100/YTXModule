@@ -110,6 +110,8 @@ void Swizzle(Class class, SEL originalSelector, Method swizzledMethod)
         SWIZZLE_DELEGATE_METHOD(applicationDidBecomeActive:)
         SWIZZLE_DELEGATE_METHOD(applicationWillResignActive:)
         SWIZZLE_DELEGATE_METHOD(application: openURL: options:)
+        SWIZZLE_DELEGATE_METHOD(application: handleOpenURL:)
+        SWIZZLE_DELEGATE_METHOD(application: openURL: sourceApplication: annotation:)
         SWIZZLE_DELEGATE_METHOD(applicationDidReceiveMemoryWarning:)
         SWIZZLE_DELEGATE_METHOD(applicationWillTerminate:)
         SWIZZLE_DELEGATE_METHOD(applicationSignificantTimeChange:);
@@ -336,6 +338,36 @@ static NSMutableArray<id> *YTXModuleObjects;
     }
     return result;
 }
+
++ (BOOL)ytxmodule_application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    DEF_APPDELEGATE_METHOD_CONTAIN_RESULT(application, url);
+}
+
++ (BOOL)ytxmodule_application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    BOOL result = YES;
+    SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
+    SELECTOR_IS_EQUAL(ytx_selector, _cmd)
+    if (imp1 != imp2) {
+        result = ((BOOL (*)(id, SEL, id, id, id, id))(void *)objc_msgSend)(self, ytx_selector, application, url, sourceApplication, annotation);
+    }
+    BOOL (*typed_msgSend)(id, SEL, id, id, id, id) = (void *)objc_msgSend;
+    for (Class cls in YTXModuleClasses) {
+        if ([cls respondsToSelector:_cmd]) {
+            typed_msgSend(cls, _cmd, application, url, sourceApplication, annotation);
+        }
+    }
+    
+    for (NSValue * obj in YTXModuleObjects) {
+        id target = [obj nonretainedObjectValue];
+        if ([target respondsToSelector:_cmd]) {
+            typed_msgSend(target, _cmd, application, url, sourceApplication, annotation);
+        }
+    }
+    return result;
+}
+
 + (void)ytxmodule_applicationDidReceiveMemoryWarning:(UIApplication *)application;      // try to clean up as much memory as possible. next step is to terminate ap
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
