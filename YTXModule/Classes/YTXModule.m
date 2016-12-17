@@ -564,7 +564,7 @@ static NSMutableArray<id> *YTXModuleObjects;
     NSMutableDictionary *subRoutes = [self addURLPattern:URLPattern];
     if (selector && subRoutes) {
         subRoutes[@"_"] = NSStringFromSelector(selector);
-        subRoutes[@"__"] = target;
+        subRoutes[@"__"] = [NSValue valueWithNonretainedObject:target];
     }
 }
 
@@ -643,7 +643,7 @@ static NSMutableArray<id> *YTXModuleObjects;
         parameters[YTX_MODULE_ROUTER_SELECTOR_KEY] = [subRoutes[@"_"] copy];
     }
     if (subRoutes[@"__"]) {
-        parameters[YTX_MODULE_ROUTER_CLASS_KEY] = [NSValue valueWithNonretainedObject:[subRoutes[@"__"] copy]];
+        parameters[YTX_MODULE_ROUTER_CLASS_KEY] = subRoutes[@"__"];
     }
     
     return parameters;
