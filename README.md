@@ -1,15 +1,15 @@
 # YTXModule
 
 ## Example
-在.m中
+In .m
 ```objective-c
 YTXMODULE_EXTERN()
 {
-    //相当于load
+    //This is load
     isLoad = YES;
 }
 
-//记得判断 userInfo, completion是否为空
+//check userInfo/completion should be nil
 
 YTXMODULE_EXTERN_ROUTER_METHOD(@"URL")
 {
@@ -42,7 +42,8 @@ YTXMODULE_EXTERN_ROUTER_METHOD(@"YTX://QUERY/:query")
 }
 
 ```
-在其他地方
+
+other .m
 ```objective-c
 [YTXModule openURL:@"URL" withUserInfo:@{@"Test":@1} completion:^(id result) {
     NSLog(@"completion:%@", result);
@@ -52,6 +53,40 @@ NSString * testObject1 = [YTXModule objectForURL:@"object" withUserInfo:@{@"Test
 
 [YTXModule openURL:@"YTX://QUERY/query?age=18&name=CJ"];
 ```
+
+Application life. Support all application life.
+```objective-c
+YTXMODULE_EXTERN()
+{
+    
+}
++ (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions
+{
+    applicationLifCycle1 = YES;
+    [YTXModule registerURLPattern:@"YTX://Test/targetSelector" withTarget:self withSelector:@selector(testRegisterTargetSelector)];
+    testRegisterTargetSelector = [YTXModule objectForURL:@"YTX://Test/targetSelector"];
+    return YES;
+}
+```
+
+```objective-c
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [YTXModule registerAppDelegateObject:self];
+}
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    NSLog(@"Receive BecomeActive");
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    NSLog(@"Receive ResignActive");
+}
+```
+
+More infomation, please check [test case](https://github.com/mdsb100/YTXModule/blob/master/Example/Tests/TestYTXModuleSpec.m)
 
 ## Requirements
 
