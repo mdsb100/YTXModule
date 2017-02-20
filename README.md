@@ -75,6 +75,13 @@ YTXMODULE_EXTERN()
     [super viewWillAppear:animated];
     [YTXModule registerAppDelegateObject:self];
 }
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [YTXModule unregisterAppDelegateObject:self];
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     NSLog(@"Receive BecomeActive");
