@@ -2,7 +2,7 @@
 #获得当前目录的名字，一般是YTXChartSocket这种
 PROJECT_NAME=${PWD##*/}
 
-IS_SOURCE=1 pod package ${PROJECT_NAME}.podspec --exclude-deps --no-mangle --library --spec-sources=http://gitlab.baidao.com/ios/ytx-pod-specs.git,https://github.com/CocoaPods/Specs.git
+IS_SOURCE=1 pod package ${PROJECT_NAME}.podspec --exclude-deps --no-mangle --library --spec-sources=http://gitlab.yintech.net/ytx-ios/ytx-pod-specs.git,https://github.com/CocoaPods/Specs.git
 
 ret=$?
 
