@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.description      = '组件化可以获得App生命周期，并且可以收发消息'
 
-  s.homepage         = 'http://gitlab.baidao.com/ios/YTXModule.git'
+  s.homepage         = 'http://gitlab.yintech.net/ytx-ios/YTXModule.git'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'caojun' => '78612846@qq.com' }
@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   ytx_zipURL='http://ios-pod.baidao.com/binaryfiles/YTXModule.zip'
 
   if ENV['IS_SOURCE'] || ENV["#{s.name}_SOURCE"]
-      s.source           = { :git => 'http://gitlab.baidao.com/ios/YTXModule.git', :tag => s.version.to_s }
+      s.source           = { :git => 'http://gitlab.yintech.net/ytx-ios/YTXModule.git', :tag => s.version.to_s }
   else
       s.source           = { :http => ytx_zipURL}
   end
