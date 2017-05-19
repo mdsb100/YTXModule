@@ -115,7 +115,7 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
 /**
  *  取消注册某个 URL Pattern
  *
- *  @param URLPattern
+ *  @param URLPattern 注册的URL
  */
 + (void)deregisterURLPattern:(nonnull NSString *)URLPattern;
 
@@ -139,7 +139,7 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
  *  打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
  *
  *  @param URL        带 Scheme 的 URL，如 mgj://beauty/4
- *  @param parameters 附加参数
+ *  @param userInfo 附加参数
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
 + (void)openURL:(nonnull NSString *)URL withUserInfo:(nullable NSDictionary *)userInfo completion:(nullable void (^)(_Nullable id result))completion;
@@ -147,24 +147,24 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
 /**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object
  *
- *  @param URL
+ *  @param URL 获取对象的URL
  */
 + (nullable id)objectForURL:(nonnull NSString *)URL;
 
 /**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object
  *
- *  @param URL
- *  @param userInfo
+ *  @param URL 获取对象的URL
+ *  @param userInfo 额外的参数
  */
 + (nullable id)objectForURL:(nonnull NSString *)URL withUserInfo:(nullable NSDictionary *)userInfo;
 
 /**
  *  是否可以打开URL
  *
- *  @param URL
+ *  @param URL 获取对象的URL
  *
- *  @return
+ *  @return 能否打开这个URL
  */
 + (BOOL)canOpenURL:(nonnull NSString *)URL;
 
@@ -178,7 +178,7 @@ extern  NSString *const _Nonnull YTXModuleRouterParameterUserInfo;
  *  @param pattern    url pattern 比如 @"beauty/:id"
  *  @param parameters 一个数组，数量要跟 pattern 里的变量一致
  *
- *  @return
+ *  @return 拼接后的字符串
  */
 + (nonnull NSString *)generateURLWithPattern:(nonnull NSString *)pattern parameters:(nonnull NSArray *)parameters;
 
