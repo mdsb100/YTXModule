@@ -20,6 +20,8 @@
  */
 + (void)jumpPage:(nonnull NSString *)page data:(nullable NSDictionary *)data from:(nullable UIViewController *)viewController;
 
+/** Example
 - (void)jumpExample:(nullable NSDictionary *)data from:(nullable UIViewController *)viewController;
+ */
 
 @end

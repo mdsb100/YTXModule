@@ -6,12 +6,30 @@
 //  Copyright © 2017 caojun. All rights reserved.
 //
 
+#import <YTXModule/YTXModuleJump.h>
+
+NSString *sign;
+
+@interface YTXModuleJump (Test)
+
+- (void)JumpTest:(NSDictionary *)data from:(UIViewController *)viewController;
+
+@end
+
+@implementation YTXModuleJump (Test)
+
+- (void)JumpTest:(NSDictionary *)data from:(UIViewController *)viewController {
+    sign = @"success";
+}
+
+@end
 
 SPEC_BEGIN(InitialTestYTXModuleJumpSpec)
 
 describe(@"测试YTXModuleJump", ^{
-    it(@"检查router不会覆盖", ^{
-        [[@1 should] equal:@1];
+    it(@"跳转Jump成功", ^{
+        [YTXModuleJump jumpPage:@"TEST" data:nil from:nil];
+        [[sign should] equal:@"success"];
     });
 });
 

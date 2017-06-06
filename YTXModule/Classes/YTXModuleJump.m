@@ -26,8 +26,4 @@
     }
 }
 
-- (void)jumpExample:(NSDictionary *)data from:(UIViewController *)viewController {
-    
-}
-
 @end
