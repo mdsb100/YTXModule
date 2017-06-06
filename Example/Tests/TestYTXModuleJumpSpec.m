@@ -12,13 +12,13 @@ NSString *sign;
 
 @interface YTXModuleJump (Test)
 
-- (void)JumpTest:(NSDictionary *)data from:(UIViewController *)viewController;
+- (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController;
 
 @end
 
 @implementation YTXModuleJump (Test)
 
-- (void)JumpTest:(NSDictionary *)data from:(UIViewController *)viewController {
+- (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController {
     sign = @"success";
 }
 
