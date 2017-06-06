@@ -7,7 +7,7 @@
 //
 
 
-SPEC_BEGIN(InitialTestYTXModuleSpec)
+SPEC_BEGIN(InitialTestYTXModuleJumpSpec)
 
 describe(@"测试YTXModuleJump", ^{
     it(@"检查router不会覆盖", ^{
