@@ -8,7 +8,7 @@
 
 #import <YTXModule/YTXModuleJump.h>
 
-NSString *sign;
+UIViewController *sign;
 
 @interface YTXModuleJump (Test)
 
@@ -19,7 +19,7 @@ NSString *sign;
 @implementation YTXModuleJump (Test)
 
 + (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController {
-    sign = @"success";
+    sign = viewController;
 }
 
 @end
@@ -28,8 +28,9 @@ SPEC_BEGIN(InitialTestYTXModuleJumpSpec)
 
 describe(@"测试YTXModuleJump", ^{
     it(@"跳转Jump成功", ^{
-        [YTXModuleJump jumpPage:@"Test" data:nil from:[UIViewController new]];
-        [[sign should] equal:@"success"];
+        UIViewController *viewController = [UIViewController new];
+        [YTXModuleJump jumpPage:@"Test" data:nil from:viewController];
+        [[sign should] equal:viewController];
     });
 });
 
