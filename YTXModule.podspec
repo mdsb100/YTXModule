@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'YTXModule'
-  s.version          = '0.7.2'
+  s.version          = '1.0.0'
   s.summary          = 'YTXModule 组件化'
 
 # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.author           = { 'caojun' => '78612846@qq.com' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
 
   ytx_zipURL='http://ios-pod.baidao.com/binaryfiles/YTXModule.zip'
 
