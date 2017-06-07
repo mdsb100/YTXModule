@@ -15,13 +15,7 @@
     if ([YTXModuleJump respondsToSelector:s]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        if ([viewController respondsToSelector:NSSelectorFromString(@"viewWillGoto")]) {
-            [viewController performSelector:NSSelectorFromString(@"viewWillGoto")];
-        }
         [YTXModuleJump performSelector:s withObject:data ?: @{} withObject:viewController];
-        if ([viewController respondsToSelector:NSSelectorFromString(@"viewDidGoto")]) {
-            [viewController performSelector:NSSelectorFromString(@"viewDidGoto")];
-        }
 #pragma clang diagnostic pop
     }
 }

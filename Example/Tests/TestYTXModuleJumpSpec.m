@@ -12,13 +12,13 @@ NSString *sign;
 
 @interface YTXModuleJump (Test)
 
-- (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController;
++ (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController;
 
 @end
 
 @implementation YTXModuleJump (Test)
 
-- (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController {
++ (void)jumpTest:(NSDictionary *)data from:(UIViewController *)viewController {
     sign = @"success";
 }
 
@@ -28,7 +28,7 @@ SPEC_BEGIN(InitialTestYTXModuleJumpSpec)
 
 describe(@"测试YTXModuleJump", ^{
     it(@"跳转Jump成功", ^{
-        [YTXModuleJump jumpPage:@"TEST" data:nil from:nil];
+        [YTXModuleJump jumpPage:@"Test" data:nil from:[UIViewController new]];
         [[sign should] equal:@"success"];
     });
 });

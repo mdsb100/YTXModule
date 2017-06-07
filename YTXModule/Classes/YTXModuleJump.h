@@ -18,10 +18,10 @@
  @param data 页面跳转需要传递的参数
  @param viewController 你从哪里来
  */
-+ (void)jumpPage:(nonnull NSString *)page data:(nullable NSDictionary *)data from:(nullable UIViewController *)viewController;
++ (void)jumpPage:(nonnull NSString *)page data:(nullable NSDictionary *)data from:(nonnull UIViewController *)viewController;
 
 /** Example
-- (void)jumpExample:(nullable NSDictionary *)data from:(nullable UIViewController *)viewController;
++ (void)jumpExample:(nullable NSDictionary *)data from:(nullable UIViewController *)viewController;
  */
 
 @end
