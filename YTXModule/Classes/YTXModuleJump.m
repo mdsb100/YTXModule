@@ -12,10 +12,10 @@
 
 + (void)jumpPage:(NSString *)page data:(NSDictionary *)data from:(UIViewController *)viewController {
     SEL s = NSSelectorFromString([NSString stringWithFormat:@"jump%@:from:", page]);
-    if ([YTXModuleJump respondsToSelector:s]) {
+    if ([self respondsToSelector:s]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [YTXModuleJump performSelector:s withObject:data ?: @{} withObject:viewController];
+        [self performSelector:s withObject:data ?: @{} withObject:viewController];
 #pragma clang diagnostic pop
     }
 }
