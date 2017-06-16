@@ -290,6 +290,33 @@ describe(@"测试YTXModule", ^{
             [testCoverA shouldNotBeNil];
             [testCoverB shouldNotBeNil];
         });
+        
+        it(@"register unregister url", ^{
+            NSString * url = @"method://testregister";
+            UIViewController * vc = [UIViewController new];
+            [YTXModule registerURLPattern:url withTarget:vc withSelector:@selector(viewDidLoad)];
+            
+            BOOL ret = [YTXModule canOpenURL:url];
+            
+            [[@(ret) should] equal:@YES];
+            
+            [YTXModule deregisterURLPattern:url];
+            
+            ret = [YTXModule canOpenURL:url];
+            
+            [[@(ret) should] equal:@NO];
+        });
+        
+        it(@"generateURLWithPattern", ^{
+            NSString * url = [YTXModule generateURLWithPattern:@"object://test/:id/:kk" parameters:@[@10, @"name"]];
+            
+            [[url should] equal:@"object://test/10/name"];
+        });
+        
+        it(@"unregisterAppDelegate", ^{
+            [YTXModule registerAppDelegateModule:[YTXTestModuleA class]];
+            [YTXModule unregisterAppDelegateObject:[YTXTestModuleA class]];
+        });
     });
   
     context(@"测试willCallObjectForUrl", ^{
@@ -301,6 +328,7 @@ describe(@"测试YTXModule", ^{
             [[@(testOnceWillCallObjectForUrl) should] equal:@1];
         });
     });
+    
 });
 
 SPEC_END
