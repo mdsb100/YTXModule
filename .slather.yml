@@ -1,0 +1,5 @@
+workspace: Example/POD_NAME.xcworkspace
+xcodeproj: Example/POD_NAME.xcodeproj
+scheme: POD_NAME-Example
+source_files: POD_NAME/Classes/ViewModels/*.m
+output_directory: ./coverage_report

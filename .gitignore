@@ -21,6 +21,8 @@ DerivedData
 
 # Bundler
 .bundle
+coverage_report/
+.scannerwork/
 
 Carthage
 # We recommend against adding the Pods directory to your .gitignore. However

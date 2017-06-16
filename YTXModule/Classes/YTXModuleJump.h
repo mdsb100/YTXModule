@@ -7,6 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <YTXModule/YTXModule.h>
+
+extern  NSString *const _Nonnull YTXModuleRouterParameterSourceViewController;
+
+#define YTXMODULE_SOURCE_VIEWCONTROLLER(__PARA__) \
+NSDictionary * __dict = parameters ? : @{};\
+NSDictionary * userInfo = __dict[YTXModuleRouterParameterUserInfo]; \
+UIViewController * __PARA__ = userInfo ? userInfo[YTXModuleRouterParameterSourceViewController] : nil;
+
+#define YTXMODULE_EXAPAND_VIEWCONTROLLER_USRINFO_COMPLETION(__VC__, __USRINFO__, __COMPLETION__) \
+NSDictionary * __dict = parameters ? : @{};\
+void(^__COMPLETION__)(id result) = __dict[YTXModuleRouterParameterCompletion]; \
+NSDictionary * __USRINFO__ = __dict[YTXModuleRouterParameterUserInfo]; \
+UIViewController * __VC__ = __USRINFO__ ? __USRINFO__[YTXModuleRouterParameterSourceViewController] : nil;
+
 
 @interface YTXModuleJump : NSObject
 
@@ -23,5 +38,14 @@
 /** Example
 + (void)jumpExample:(nullable NSDictionary *)data from:(nonnull UIViewController *)viewController;
  */
+
+
+/**
+ * 其实是用openURL
+ * YES 表示 找到了URL
+ */
++ (BOOL)jumpWithUrl:(nonnull NSString *)url fromViewController:(nonnull UIViewController *) fromViewController;
+
++ (BOOL)jumpWithUrl:(nonnull NSString *)url fromViewController:(nonnull UIViewController *) fromViewController userInfo:(nullable NSDictionary *)userInfo completion:(nullable void (^)(_Nullable id result))completion;
 
 @end

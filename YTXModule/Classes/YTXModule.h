@@ -20,9 +20,9 @@
 + (void)__ytxmodule_load \
 
 #define YTXMODULE_EXAPAND_PARAMETERS(__PARA__) \
-    NSDictionary * dict = __PARA__ ? : @{};\
-    void(^completion)(id result) = dict[YTXModuleRouterParameterCompletion]; \
-    NSDictionary * userInfo = dict[YTXModuleRouterParameterUserInfo]; \
+    NSDictionary * __dict = __PARA__ ? : @{};\
+    void(^completion)(id result) = __dict[YTXModuleRouterParameterCompletion]; \
+    NSDictionary * userInfo = __dict[YTXModuleRouterParameterUserInfo]; \
 
 #define YTX_CONCAT2(A, B) A ## B
 #define YTX_CONCAT(A, B) YTX_CONCAT2(A, B)

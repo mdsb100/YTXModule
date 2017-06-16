@@ -4,9 +4,11 @@ before_script:
 stages:
   - init
   - package
+  - test
+  - sonar
   - lint
   - releasepod
-  # - updateapp
+  - updateapp
 
 init:
   tags:
@@ -39,14 +41,27 @@ package:
 test:
   tags:
     - iOS
-  stage: lint
+  stage: test
   except:
     - master
+  artifacts:
+    paths:
+      - coverage_report/*.xml
   script:
     - cd Example
     - pwd
-    - time YTXModule_SOURCE=1 pod install --verbose
-    - time xcodebuild test -workspace $CI_PROJECT_NAME.xcworkspace -scheme $CI_PROJECT_NAME-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.0' | xcpretty
+    - time IS_SOURCE=1 pod install --verbose
+    - time xcodebuild test -workspace $CI_PROJECT_NAME.xcworkspace -scheme $CI_PROJECT_NAME-Example -destination "platform=iOS Simulator,name=$SIMULATOR_NAME,OS=$TEST_SIMULATOR_VERSION" | xcpretty && (cd .. && ./coverage.sh $MIN_COVERAGE_RATE) || exit 1
+
+sonar:
+  tags:
+    - iOS
+  stage: sonar
+  except:
+    - master
+  script:
+    - sed -i "" "s/PROJECT_NAME/$CI_PROJECT_NAME/g" sonar-project.properties
+    - sonar-scanner
 
 lint_source:
   tags:
