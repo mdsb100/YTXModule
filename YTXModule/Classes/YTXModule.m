@@ -126,6 +126,8 @@ void Swizzle(Class class, SEL originalSelector, Method swizzledMethod)
         SWIZZLE_DELEGATE_METHOD(applicationWillEnterForeground:)
         SWIZZLE_DELEGATE_METHOD(applicationProtectedDataWillBecomeUnavailable:)
         SWIZZLE_DELEGATE_METHOD(applicationProtectedDataDidBecomeAvailable:)
+        SWIZZLE_DELEGATE_METHOD(application: performFetchWithCompletionHandler:)
+        SWIZZLE_DELEGATE_METHOD(application: didReceiveRemoteNotification: fetchCompletionHandler:)
     });
     [self module_setDelegate:delegate];
 }
@@ -457,6 +459,33 @@ static NSMutableArray<id> *YTXModuleObjects;
 + (void)ytxmodule_applicationProtectedDataDidBecomeAvailable:(UIApplication *)application    NS_AVAILABLE_IOS(4_0)
 {
     DEF_APPDELEGATE_METHOD(application, NULL);
+}
+
++ (void)ytxmodule_application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    DEF_APPDELEGATE_METHOD(application, completionHandler);
+}
+
++ (void)ytxmodule_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
+    SELECTOR_IS_EQUAL(ytx_selector, _cmd)
+    if (imp1 != imp2) {
+        ((void (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, application, userInfo, completionHandler);
+    }
+    void (*typed_msgSend)(id, SEL, id, id, id) = (void *)objc_msgSend;
+    for (Class cls in YTXModuleClasses) {
+        if ([cls respondsToSelector:_cmd]) {
+            typed_msgSend(cls, _cmd, application, userInfo, completionHandler);
+        }
+    }
+    
+    for (NSValue * obj in YTXModuleObjects) {
+        id target = [obj nonretainedObjectValue];
+        if ([target respondsToSelector:_cmd]) {
+            typed_msgSend(target, _cmd, application, userInfo, completionHandler);
+        }
+    }
 }
 
 #pragma mark - router
