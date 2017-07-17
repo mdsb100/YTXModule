@@ -278,7 +278,7 @@ describe(@"测试YTXModule", ^{
         });
         it(@"检查不传UserInfo和Completion确实取不到", ^{
             [[@(isCallNOParametersAndCompletion) should] equal:@1];
-            [[testUserInfoNoExits should] beNil];
+            [[testUserInfoNoExits should] beNonNil];
             [[testCompletionNoExits should] beNil];
             [[testUserInfoNoExits1 should] beNil];
             [[testCompletionNoExits1 should] beNil];

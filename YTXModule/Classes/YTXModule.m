@@ -522,10 +522,10 @@ static NSMutableArray<id> *YTXModuleObjects;
     
     NSMutableDictionary * retUserInfo;
     
-    if (parameters.allKeys.count > 3) {
+    if (parameters.allKeys.count >= 3) {
         retUserInfo = [NSMutableDictionary dictionaryWithDictionary:parameters];
         if (userInfo) {
-            [retUserInfo addEntriesFromDictionary:retUserInfo];
+            [retUserInfo addEntriesFromDictionary:userInfo];
         }
     }
     
