@@ -583,11 +583,20 @@ static NSMutableArray<id> *YTXModuleObjects;
     SEL selector = NSSelectorFromString(parameters[YTX_MODULE_ROUTER_SELECTOR_KEY]);
     id target = [parameters[YTX_MODULE_ROUTER_CLASS_KEY] nonretainedObjectValue];
     if (selector && target) {
-        if (userInfo) {
-            parameters[YTXModuleRouterParameterUserInfo] = userInfo;
+        NSMutableDictionary * retUserInfo;
+        
+        if (parameters.allKeys.count >= 3) {
+            retUserInfo = [NSMutableDictionary dictionaryWithDictionary:parameters];
+            if (userInfo) {
+                [retUserInfo addEntriesFromDictionary:userInfo];
+            }
         }
-        [parameters removeObjectForKey:YTX_MODULE_ROUTER_SELECTOR_KEY];
-        return [target performSelector:selector withObject:parameters];;
+        if (retUserInfo) {
+            parameters[YTXModuleRouterParameterUserInfo] = retUserInfo;
+        }
+        
+        [retUserInfo removeObjectForKey:YTX_MODULE_ROUTER_SELECTOR_KEY];
+        return [target performSelector:selector withObject:parameters];
     }
     return nil;
 }
