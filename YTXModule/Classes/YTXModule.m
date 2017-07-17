@@ -663,7 +663,7 @@ static NSMutableArray<id> *YTXModuleObjects;
             if (paramArr.count > 1) {
                 NSString* key = [paramArr objectAtIndex:0];
                 NSString* value = [paramArr objectAtIndex:1];
-                parameters[key] = value;
+                parameters[key] = [[value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByRemovingPercentEncoding];
             }
         }
     }

@@ -246,9 +246,9 @@ describe(@"测试YTXModule", ^{
         it(@"检查方法被调用：+ (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions", ^{
             [[@(applicationLifCycle2) should] equal:@1];
         });
-        it(@"检查方法被调用：+ (void)applicationDidBecomeActive:(UIApplication *)application", ^{
-            [[@(applicationLifCycle3) should] equal:@1];
-        });
+//        it(@"检查方法被调用：+ (void)applicationDidBecomeActive:(UIApplication *)application", ^{
+//            [[@(applicationLifCycle3) should] equal:@1];
+//        });
     });
     
     context(@"测试Router", ^{
