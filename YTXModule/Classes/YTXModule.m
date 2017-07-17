@@ -520,14 +520,23 @@ static NSMutableArray<id> *YTXModuleObjects;
         }
     }];
     
+    NSMutableDictionary * retUserInfo;
+    
+    if (parameters.allKeys.count > 3) {
+        retUserInfo = [NSMutableDictionary dictionaryWithDictionary:parameters];
+        if (userInfo) {
+            [retUserInfo addEntriesFromDictionary:retUserInfo];
+        }
+    }
+    
     if (parameters) {
         SEL selector = NSSelectorFromString(parameters[YTX_MODULE_ROUTER_SELECTOR_KEY]);
         id target = [parameters[YTX_MODULE_ROUTER_CLASS_KEY] nonretainedObjectValue];
         if (completion) {
             parameters[YTXModuleRouterParameterCompletion] = completion;
         }
-        if (userInfo) {
-            parameters[YTXModuleRouterParameterUserInfo] = userInfo;
+        if (retUserInfo) {
+            parameters[YTXModuleRouterParameterUserInfo] = retUserInfo;
         }
         if (selector && target) {
             [parameters removeObjectForKey:YTX_MODULE_ROUTER_SELECTOR_KEY];
