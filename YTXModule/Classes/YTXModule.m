@@ -580,6 +580,13 @@ static NSMutableArray<id> *YTXModuleObjects;
     
     URL = [URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *parameters = [router extractParametersFromURL:URL];
+    
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, NSString *obj, BOOL *stop) {
+        if ([obj isKindOfClass:[NSString class]]) {
+            parameters[key] = [obj stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+    }];
+    
     SEL selector = NSSelectorFromString(parameters[YTX_MODULE_ROUTER_SELECTOR_KEY]);
     id target = [parameters[YTX_MODULE_ROUTER_CLASS_KEY] nonretainedObjectValue];
     if (selector && target) {
