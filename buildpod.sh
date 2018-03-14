@@ -8,7 +8,7 @@ git config --get user.name
 git config --get user.email
 
 echo "publish repo $PROJECT_NAME"
-pod repo push baidao-ios-ytx-pod-specs $PROJECT_NAME.podspec --verbose --use-libraries
+pod repo push baidao-ios-ytx-pod-specs $PROJECT_NAME.podspec --verbose --use-libraries --allow-warnings
 
 ret=$?
 
