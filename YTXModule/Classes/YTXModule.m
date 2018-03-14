@@ -322,6 +322,9 @@ static NSMutableArray<id> *YTXModuleObjects;
     BOOL result = YES;
     SEL ytx_selector = NSSelectorFromString([NSString stringWithFormat:@"ytxmodule_%@", NSStringFromSelector(_cmd)]);
     SELECTOR_IS_EQUAL(ytx_selector, _cmd)
+    if (!imp1 || !imp2) {
+        return YES;
+    }
     if (imp1 != imp2) {
         result = ((BOOL (*)(id, SEL, id, id, id))(void *)objc_msgSend)(self, ytx_selector, app, url, options);
     }
