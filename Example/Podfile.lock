@@ -1,6 +1,6 @@
 PODS:
   - Kiwi (2.4.0)
-  - YTXModule (1.2.5)
+  - YTXModule (1.2.6)
 
 DEPENDENCIES:
   - Kiwi
@@ -12,7 +12,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
-  YTXModule: 639bbad2d659a3c0ead7846edc80fa3fdb302b69
+  YTXModule: 7b938c73ccc1994476b927b5672edc87d9c9bd56
 
 PODFILE CHECKSUM: 46a160ebe35fc51a57b71dc8803e6cd3260d766c
 
